@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeraStream · Secure Video Player</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.14/dist/hls.min.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- ── Ambient background ──────────────────────────────────────────── -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+<div class="noise-overlay"></div>
+
+<!-- ── Header ──────────────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="logo">
+    <span class="logo-icon">▶</span>
+    <span class="logo-text">Tera<em>Stream</em></span>
+  </div>
+  <nav class="header-nav">
+    <span class="badge-secure">🔒 Encrypted</span>
+    <span class="badge-secure">⚡ Fast Proxy</span>
+  </nav>
+</header>
+
+<!-- ── Hero ────────────────────────────────────────────────────────── -->
+<main class="main-container">
+  <section class="hero" id="hero">
+    <h1 class="hero-title">Stream Any<br/><span class="gradient-text">TeraBox Video</span></h1>
+    <p class="hero-sub">Paste a TeraBox share link and watch instantly — no download, no tracking.</p>
+
+    <!-- Input Card -->
+    <div class="input-card glass" id="inputCard">
+      <div class="input-group">
+        <div class="input-icon">🔗</div>
+        <input
+          type="url"
+          id="urlInput"
+          class="url-input"
+          placeholder="https://terabox.com/s/..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="stream-btn" id="streamBtn" onclick="handleFetch()">
+          <span class="btn-text">Stream</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+      <div class="input-hints">
+        <span>✓ terabox.com</span>
+        <span>✓ teraboxapp.com</span>
+        <span>✓ 1024terabox.com</span>
+        <span>✓ + more</span>
+      </div>
+    </div>
+
+    <!-- Error Box -->
+    <div class="error-box glass" id="errorBox" style="display:none">
+      <span class="error-icon">⚠</span>
+      <span id="errorMsg">Something went wrong.</span>
+    </div>
+  </section>
+
+  <!-- ── Loading state ─────────────────────────────────────────────── -->
+  <section class="loading-section" id="loadingSection" style="display:none">
+    <div class="loader-ring">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <p class="loading-text" id="loadingText">Fetching secure stream link…</p>
+  </section>
+
+  <!-- ── Player Section ────────────────────────────────────────────── -->
+  <section class="player-section glass" id="playerSection" style="display:none">
+
+    <!-- Meta bar -->
+    <div class="meta-bar" id="metaBar">
+      <div class="meta-thumb-wrap">
+        <img id="metaThumb" src="" alt="thumb" class="meta-thumb" style="display:none" />
+        <div class="meta-thumb-placeholder" id="thumbPlaceholder">🎬</div>
+      </div>
+      <div class="meta-info">
+        <h2 class="meta-title" id="metaTitle">Loading…</h2>
+        <div class="meta-row">
+          <span class="meta-tag" id="metaSize"></span>
+          <span class="meta-tag expire-tag" id="expireTag">Link expires in <span id="expireTimer">--:--</span></span>
+        </div>
+      </div>
+      <button class="reset-btn" onclick="resetPlayer()" title="Stream another video">✕ New</button>
+    </div>
+
+    <!-- Video wrapper -->
+    <div class="video-wrapper" id="videoWrapper">
+      <video
+        id="videoPlayer"
+        controls
+        autoplay
+        playsinline
+        class="video-el"
+      ></video>
+      <div class="video-overlay-spinner" id="videoSpinner">
+        <div class="loader-ring small"><div></div><div></div><div></div><div></div></div>
+      </div>
+    </div>
+
+    <!-- Player status -->
+    <div class="player-status" id="playerStatus">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">Initialising player…</span>
+    </div>
+
+    <!-- Security note -->
+    <div class="security-note">
+      🔐 Stream is proxied & encrypted · Direct URL is hidden · Session-only token
+    </div>
+  </section>
+
+  <!-- ── Features grid ─────────────────────────────────────────────── -->
+  <section class="features" id="features">
+    <div class="feature-card glass">
+      <div class="feature-icon">🛡️</div>
+      <h3>Hidden URLs</h3>
+      <p>Real stream links are never exposed to your browser. Everything goes through our secure proxy.</p>
+    </div>
+    <div class="feature-card glass">
+      <div class="feature-icon">⏱️</div>
+      <h3>Token Expiry</h3>
+      <p>Every session token auto-expires within 30 minutes, preventing link sharing or hotlinking.</p>
+    </div>
+    <div class="feature-card glass">
+      <div class="feature-icon">🚀</div>
+      <h3>HLS Streaming</h3>
+      <p>Adaptive bitrate HLS playback via HLS.js for smooth, buffer-free video on any connection.</p>
+    </div>
+    <div class="feature-card glass">
+      <div class="feature-icon">⚡</div>
+      <h3>API Cache</h3>
+      <p>Responses are cached for 5 minutes so repeat streams load instantly without extra API calls.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>TeraStream · Secure Proxy Streaming · No downloads · No tracking</p>
+</footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
